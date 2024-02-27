@@ -4,7 +4,6 @@ from django.contrib.auth import get_user_model
 
 UserModel = get_user_model()
 
-
 class Category(BaseModel):
     name = models.CharField(max_length=255, null=False, blank=False, verbose_name="Name", unique=True)
     description = models.TextField(null=False, blank=False, verbose_name="Description")
@@ -35,16 +34,17 @@ class Post(BaseModel):
 
 
 class Media(BaseModel):
-    class MediaType(models.TextChoices):
-        IMAGE = 'image', 'Image'
-        VIDEO = 'video', 'Video'
-        AUDIO = 'audio', 'Audio'
+    MEDIA_TYPE = (
+        ("image", "Image"),
+        ("video", "Video"),
+        ("audio", "Audio"),
+    )
 
     file = models.FileField(upload_to='blog/media/', verbose_name='File')
     media_type = models.CharField(
         max_length=10, 
-        choices=MediaType.choices, 
-        default=MediaType.IMAGE, 
+        choices=MEDIA_TYPE, 
+        default="image", 
         null=False, 
         blank=False,
         verbose_name='Media type'

@@ -12,7 +12,6 @@ class CommentSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class PostSerializer(serializers.ModelSerializer):
-    # Use SerializerMethodField to customize comments representation
     comments = serializers.SerializerMethodField()
 
     class Meta:
@@ -20,7 +19,6 @@ class PostSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def get_comments(self, post):
-        # Filter and serialize only approved comments
         approved_comments = post.comments.filter(approved=True)
         serializer = CommentSerializer(approved_comments, many=True)
         return serializer.data
