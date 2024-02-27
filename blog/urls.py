@@ -2,6 +2,9 @@
 from django.urls import path
 from . import views
 
+app_name = 'blog'
+
+
 urlpatterns = [
     # Template Views
     path('categories/', views.category_list, name='category_list'),

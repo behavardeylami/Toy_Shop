@@ -1,0 +1,48 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+  <h1>{{ product.name }}</h1>
+  <p>{{ product.description }}</p>
+
+  <!-- Display Thumbnail -->
+  {% if product.thumbnail %}
+    <img src="{{ product.thumbnail.url }}" alt="{{ product.name }} thumbnail">
+  {% endif %}
+
+  <!-- Display Medias -->
+  <h2>Medias</h2>
+  {% for media in product.Medias.all %}
+    {% if media.media_type == 'image' %}
+      <img src="{{ media.file.url }}" alt="{{ media.title }}">
+    {% elif media.media_type == 'video' %}
+      <video controls>
+        <source src="{{ media.file.url }}" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+    {% elif media.media_type == 'audio' %}
+      <audio controls>
+        <source src="{{ media.file.url }}" type="audio/mp3">
+        Your browser does not support the audio tag.
+      </audio>
+    {% endif %}
+    <p>{{ media.title }} - {{ media.description }}</p>
+  {% endfor %}
+
+  <h2>Comments</h2>
+  <ul>
+    {% for comment in approved_comments %}
+      <li>{{ comment.author.username }} - {{ comment.text }}</li>
+    {% endfor %}
+  </ul>
+
+  {% if user.is_authenticated %}
+    <h3>Add a Comment</h3>
+    <form method="post" action="{% url 'store:api_comment_list' product.id %}">
+      {% csrf_token %}
+      <textarea name="text" required></textarea>
+      <input type="submit" value="Submit Comment">
+    </form>
+  {% else %}
+    <p>Login to add a comment.</p>
+  {% endif %}
+{% endblock %}

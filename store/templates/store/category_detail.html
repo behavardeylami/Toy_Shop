@@ -4,10 +4,10 @@
   <h1>{{ category.name }}</h1>
   <p>{{ category.description }}</p>
 
-  <h2>Posts</h2>
+  <h2>Products</h2>
   <ul>
-    {% for post in category.posts.all %}
-      <li><a href="{% url 'blog:post_detail' post.id %}">{{ post.title }}</a></li>
+    {% for product in category.products.all %}
+      <li><a href="{% url 'store:product_detail' product.id %}">{{ product.name }}</a></li>
     {% endfor %}
   </ul>
 {% endblock %}

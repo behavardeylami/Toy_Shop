@@ -13,7 +13,7 @@
 
   {% if user.is_authenticated %}
     <h3>Add a Comment</h3>
-    <form method="post" action="{% url 'api_comment_list' post.id %}">
+    <form method="post" action="{% url 'blog:api_comment_list' post.id %}">
       {% csrf_token %}
       <textarea name="text" required></textarea>
       <input type="submit" value="Submit Comment">

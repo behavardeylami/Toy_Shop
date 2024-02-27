@@ -106,7 +106,7 @@ def api_comment_list(request, post_id):
         serializer = CommentSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
-            return redirect('post_detail', post_id=post_id)  # Redirect to the post_detail page
+            return redirect('blog:post_detail', post_id=post_id)  # Redirect to the post_detail page
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET', 'PUT'])

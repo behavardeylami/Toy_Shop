@@ -1,0 +1,17 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+  <h1>Products</h1>
+  <ul>
+    {% for product in products %}
+      <li>
+        <a href="{% url 'store:product_detail' product.id %}">
+          {{ product.name }}
+          {% if product.thumbnail %}
+            <img src="{{ product.thumbnail.url }}" alt="{{ product.name }} Thumbnail">
+          {% endif %}
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+{% endblock %}
