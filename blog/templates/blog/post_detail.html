@@ -1,0 +1,24 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+  <h1>{{ post.title }}</h1>
+  <p>{{ post.body }}</p>
+
+  <h2>Comments</h2>
+  <ul>
+    {% for comment in approved_comments %}
+      <li>{{ comment.author.username }} - {{ comment.text }}</li>
+    {% endfor %}
+  </ul>
+
+  {% if user.is_authenticated %}
+    <h3>Add a Comment</h3>
+    <form method="post" action="{% url 'api_comment_list' post.id %}">
+      {% csrf_token %}
+      <textarea name="text" required></textarea>
+      <input type="submit" value="Submit Comment">
+    </form>
+  {% else %}
+    <p>Login to add a comment.</p>
+  {% endif %}
+{% endblock %}
