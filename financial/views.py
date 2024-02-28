@@ -2,6 +2,9 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from cart.models import ShoppingBasket
 from .models import Payment
+from rest_framework import viewsets
+from .serializers import PaymentSerializer
+from rest_framework import generics
 
 
 def payment_form_view(request):
@@ -32,3 +35,12 @@ def payment_successful(request, basket_id):
 def payment_unsuccessful(request):
     # Any actions to be taken in case of an unsuccessful payment can be added here
     return render(request, 'financial/payment_unsuccessful.html')
+
+
+class PaymentListCreateView(generics.ListCreateAPIView):
+    queryset = Payment.objects.all()
+    serializer_class = PaymentSerializer
+
+class PaymentRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Payment.objects.all()
+    serializer_class = PaymentSerializer
