@@ -28,15 +28,6 @@ def payment_successful(request, basket_id):
     
     return render(request, 'financial/payment_successful.html', {'payment': payment})
 
-    # # Creating a successful payment record in the database
-    # payment = Payment.objects.create(basket=basket, amount=basket.total_price, payment_status=Payment.PaymentStatus.COMPLETED)
-    
-    # # Settling the payment and emptying the shopping basket
-    # basket.update_total_price()
-    # basket.delete()
-    
-    # return render(request, 'financial/payment_successful.html', {'payment': payment})
-
 
 def payment_unsuccessful(request):
     # Any actions to be taken in case of an unsuccessful payment can be added here

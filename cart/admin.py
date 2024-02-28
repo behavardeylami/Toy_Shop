@@ -40,7 +40,6 @@ class ShoppingBasketAdmin(admin.ModelAdmin):
     # admin.site.register(ShoppingBasket, ShoppingBasketAdmin)
 
 
-
 @admin.register(BasketItem)
 class BasketItemAdmin(admin.ModelAdmin):
     list_display = ('order', 'user', 'product', 'quantity', 'order_at')

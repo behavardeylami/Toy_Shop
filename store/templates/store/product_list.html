@@ -14,4 +14,16 @@
       </li>
     {% endfor %}
   </ul>
+
+    <!-- Display Shopping Basket -->
+    <div class="shopping-basket-section">
+      <h3>Shopping Basket</h3>
+      <p>Total Price: {{ user_basket.total_price }}</p>
+      <p>Number of Products: {{ basket_items.count }}</p>
+      <ul>
+        {% for item in basket_items %}
+          <li>{{ item.product.name }} - Quantity: {{ item.quantity }}</li>
+        {% endfor %}
+      </ul>
+    </div>
 {% endblock %}
