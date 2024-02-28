@@ -39,10 +39,12 @@ def product_detail(request, product_id):
         basket_items = []
 
     context = {
+        # 'price': price,
         'product': product,
         'approved_comments': approved_comments,
         'user_basket': user_basket,
         'basket_items': basket_items,
+        'total_price': user_basket.total_price,
     }
 
     return render(request, 'store/product_detail.html', context)
@@ -161,6 +163,8 @@ def add_to_cart(request, product_id):
     # Increment the quantity of the basket item
     basket_item.quantity += 1
     basket_item.save()
+
+    user_basket.update_total_price()
 
     # Redirect back to the product detail page
     return redirect('store:product_detail', product_id=product_id)

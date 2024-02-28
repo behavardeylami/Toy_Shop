@@ -9,6 +9,12 @@
     <img src="{{ product.thumbnail.url }}" alt="{{ product.name }} thumbnail">
   {% endif %}
 
+  {% if product.price %}
+  <p>Price: ${{ product.price.price }}</p>
+  {% else %}
+    <p>Price: N/A</p>
+  {% endif %}
+
   <!-- Display Medias -->
   <h2>Medias</h2>
   {% for media in product.Medias.all %}

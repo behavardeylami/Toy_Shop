@@ -15,14 +15,27 @@ def payment_form_view(request):
 def payment_successful(request, basket_id):
     basket = ShoppingBasket.objects.get(pk=basket_id)
     
-    # Creating a successful payment record in the database
-    payment = Payment.objects.create(basket=basket, amount=basket.total_price, payment_status=Payment.PaymentStatus.COMPLETED)
+    total_price = basket.total_price if basket.total_price else 0
+    payment = Payment.objects.create(
+        basket=basket,
+        amount=total_price,  # Providing the correct value for the amount field
+        payment_status=Payment.PaymentStatus.COMPLETED
+    )
     
     # Settling the payment and emptying the shopping basket
     basket.update_total_price()
     basket.delete()
     
     return render(request, 'financial/payment_successful.html', {'payment': payment})
+
+    # # Creating a successful payment record in the database
+    # payment = Payment.objects.create(basket=basket, amount=basket.total_price, payment_status=Payment.PaymentStatus.COMPLETED)
+    
+    # # Settling the payment and emptying the shopping basket
+    # basket.update_total_price()
+    # basket.delete()
+    
+    # return render(request, 'financial/payment_successful.html', {'payment': payment})
 
 
 def payment_unsuccessful(request):
