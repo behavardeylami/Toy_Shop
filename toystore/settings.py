@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'blog.apps.BlogConfig',
     'store.apps.StoreConfig',
     'cart.apps.CartConfig',
+    'financial.apps.FinancialConfig',
+
     
     # TrustedApps
     "rest_framework",

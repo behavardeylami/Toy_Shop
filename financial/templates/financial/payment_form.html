@@ -1,0 +1,16 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+<h1>Payment Form</h1>
+<form action="{% url 'financial:payment_successful' user_basket.id %}" method="post">
+    {% csrf_token %}
+    <!-- Payment form details go here -->
+    <button type="submit">Successful Payment</button>
+</form>
+
+<form action="{% url 'financial:payment_unsuccessful' %}" method="post">
+    {% csrf_token %}
+    <!-- Unsuccessful payment form details go here -->
+    <button type="submit">Unsuccessful Payment</button>
+</form>
+{% endblock %}

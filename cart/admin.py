@@ -31,11 +31,14 @@ def deactivate_selected_items(modeladmin, request, queryset):
 class ShoppingBasketAdmin(admin.ModelAdmin):
     list_display = ('id', 'user', 'total_price', 'date_order', 'tracking_code')
     search_fields = ('user__username',)
+    readonly_fields = ['total_price']
 
     def display_total_price(self, obj):
         return obj.total_price if obj.total_price is not None else 0
 
     display_total_price.short_description = 'Total Price'
+    # admin.site.register(ShoppingBasket, ShoppingBasketAdmin)
+
 
 
 @admin.register(BasketItem)

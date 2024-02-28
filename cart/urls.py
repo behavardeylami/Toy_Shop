@@ -1,14 +1,10 @@
 from django.urls import path
-from . import views
+from .views import view_shopping_basket, add_to_basket, remove_from_basket
 
 app_name = 'cart'
 
 urlpatterns = [
-    # Views for HTML templates
-    path('', views.cart_summary, name='cart_summary'),
-    path('add/', views.cart_add, name='cart_add'),
-
-    # # API Endpoints
-    path('api/cart/summary/', views.cart_summary_api, name='cart_summary_api'),
-    path('api/cart/add/', views.cart_add_api, name='cart_add_api'),
+    path('view/', view_shopping_basket, name='view_shopping_basket'),
+    path('add/<int:product_id>/', add_to_basket, name='add_to_basket'),
+    path('remove/<int:basket_item_id>/', remove_from_basket, name='remove_from_basket'),
 ]

@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from .views import add_to_cart
 
 app_name = 'store'
 
@@ -9,6 +10,7 @@ urlpatterns = [
     path('categories/<int:category_id>/', views.category_detail, name='category_detail'),
     path('products/', views.product_list, name='product_list'),
     path('products/<int:product_id>/', views.product_detail, name='product_detail'),
+    path('add_to_cart/<int:product_id>/', add_to_cart, name='add_to_cart'),
 
     # API Views
     path('api/categories/', views.api_category_list, name='api_category_list'),

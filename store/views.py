@@ -3,16 +3,17 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
+from django.contrib.auth.decorators import login_required
 from django.urls import reverse
+from cart.models import ShoppingBasket, BasketItem
 from .models import Category, Product, Comment
 from .serializers import CategorySerializer, ProductSerializer, CommentSerializer
 from .forms import CommentForm
 
 # Template Views
-def category_list(request, category_id):
-    category = get_object_or_404(Category, id=category_id)
-    products = category.products.all()
-    return render(request, 'store/category_detail.html', {'category': category, 'products': products})
+def category_list(request):
+    categories = Category.objects.all()
+    return render(request, 'store/category_list.html', {'categories': categories})
 
 
 def category_detail(request, category_id):
@@ -27,15 +28,44 @@ def product_list(request):
 
 def product_detail(request, product_id):
     product = get_object_or_404(Product, id=product_id)
-    # Filter and serialize only approved comments
     approved_comments = product.Comments.filter(approved=True)
-    serializer = ProductSerializer(product)
 
-    return render(
-        request,
-        'store/product_detail.html',
-        {'product': product, 'approved_comments': approved_comments}
-    )
+    # Get the user's shopping basket
+    if request.user.is_authenticated:
+        user_basket, created = ShoppingBasket.objects.get_or_create(user=request.user)
+        basket_items = BasketItem.objects.filter(order=user_basket)
+    else:
+        user_basket = None
+        basket_items = []
+
+    context = {
+        'product': product,
+        'approved_comments': approved_comments,
+        'user_basket': user_basket,
+        'basket_items': basket_items,
+    }
+
+    return render(request, 'store/product_detail.html', context)
+
+    # product = get_object_or_404(Product, id=product_id)
+    # basket_items = BasketItem.objects.filter(order=request.user.shoppingbasket)
+    # context = {
+    #     'product': product,
+    #     'approved_comments': product.Comments.filter(approved=True),
+    #     'user_basket': request.user.shoppingbasket,
+    #     'basket_items': basket_items,
+    # }
+    # # Filter and serialize only approved comments
+    # # approved_comments = product.Comments.filter(approved=True)
+    # # serializer = ProductSerializer(product)
+
+    # return render(request, 'store/product_detail.html', context)
+
+    # # return render(
+    # #     request,
+    # #     'store/product_detail.html',
+    # #     {'product': product, 'approved_comments': approved_comments}
+    # # )
 
 
 def comment_view(request, product_id):
@@ -116,3 +146,21 @@ def api_comment_detail(request, comment_id):
         comment.save()
         serializer = CommentSerializer(comment)
         return Response(serializer.data)
+
+
+@login_required
+def add_to_cart(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    
+    # Get or create the user's shopping basket
+    user_basket, created = ShoppingBasket.objects.get_or_create(user=request.user)
+
+    # Get or create the basket item for the product in the basket
+    basket_item, created = BasketItem.objects.get_or_create(order=user_basket, product=product)
+
+    # Increment the quantity of the basket item
+    basket_item.quantity += 1
+    basket_item.save()
+
+    # Redirect back to the product detail page
+    return redirect('store:product_detail', product_id=product_id)

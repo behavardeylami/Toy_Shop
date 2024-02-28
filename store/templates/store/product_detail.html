@@ -42,7 +42,36 @@
       <textarea name="text" required></textarea>
       <input type="submit" value="Submit Comment">
     </form>
+
+    <!-- Display Shopping Basket -->
+    <div class="shopping-basket-section">
+      <h3>Shopping Basket</h3>
+      <p>Total Price: {{ user_basket.total_price }}</p>
+      <p>Number of Products: {{ basket_items.count }}</p>
+      <ul>
+        {% for item in basket_items %}
+          <li>{{ item.product.name }} - Quantity: {{ item.quantity }}</li>
+        {% endfor %}
+      </ul>
+
+      <!-- Add to Basket Form -->
+    <form action="{% url 'store:add_to_cart' product_id=product.pk %}" method="post">
+      {% csrf_token %}
+      <button class="add-to-cart-btn" type="submit">Add to Cart</button>
+    </form>
+  </div>
   {% else %}
-    <p>Login to add a comment.</p>
+    <p>Login to add a comment or add the product to your basket.</p>
   {% endif %}
+
+  {% if user.is_authenticated %}
+  {% if not payment_exists %}
+    <a href="{% url 'financial:payment_form' %}">Proceed to Payment</a>
+  {% else %}
+    <p>You've already made a payment for this product.</p>
+  {% endif %}
+{% else %}
+  <p>Login to proceed to payment.</p>
+{% endif %}
+
 {% endblock %}

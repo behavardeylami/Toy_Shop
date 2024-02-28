@@ -1,9 +1,9 @@
 from django.contrib import admin
-from django.contrib.admin import register
+from django.contrib.admin import register, ModelAdmin
 from django.contrib import messages
 from django.utils.translation import ngettext
 
-from .models import Category, Product, Media, Comment
+from .models import Category, Product, Price, Media, Comment
 
 
 # Admin actions
@@ -26,10 +26,12 @@ def deactivate_selected_items(modeladmin, request, queryset):
         updated_count,
     ) % updated_count, messages.SUCCESS)
 
+class MyModelAdmin(ModelAdmin):
+    actions = (activate_selected_items, deactivate_selected_items,)
 
 # Register My models
 @register(Category)
-class CategoryAdmin(admin.ModelAdmin):
+class CategoryAdmin(MyModelAdmin):
     list_display = (
         "is_active",
         "id",
@@ -41,11 +43,10 @@ class CategoryAdmin(admin.ModelAdmin):
     list_display_links = ("id", "name")
     list_filter = ('is_active', 'id', 'name', 'created_at', 'updated_at')
     search_fields = ("title", "description")
-    actions = (activate_selected_items, deactivate_selected_items,)
 
 
 @register(Product)
-class ProductAdmin(admin.ModelAdmin):
+class ProductAdmin(MyModelAdmin):
     list_display = (
         'is_active',
         'id',
@@ -62,11 +63,25 @@ class ProductAdmin(admin.ModelAdmin):
     list_filter = ('is_active', 'id', 'name', 'category', 'created_at', 'updated_at')
     search_fields = ('name', 'body', 'category__name')
 
-    actions = (activate_selected_items, deactivate_selected_items)
+
+
+@register(Price)
+class PriceAdmin(MyModelAdmin):
+    list_display = (
+        "is_active",
+        "id",
+        "product",
+        "price",
+        "created_at",
+        "updated_at",
+    )
+    list_display_links = ("id", "product")
+    list_filter = ('is_active', 'id', 'created_at', 'updated_at')
+    search_fields = ("product__name",)
 
 
 @register(Media)
-class MediaAdmin(admin.ModelAdmin):
+class MediaAdmin(MyModelAdmin):
     list_display = (
         'is_active',
         'id',
@@ -82,11 +97,10 @@ class MediaAdmin(admin.ModelAdmin):
     list_filter = ('is_active', 'id', 'title', 'date')
     search_fields = ('title', 'description')
 
-    actions = (activate_selected_items, deactivate_selected_items)
 
 
 @register(Comment)
-class CommentAdmin(admin.ModelAdmin):
+class CommentAdmin(MyModelAdmin):
     list_display = (
         'is_active',
         'id',
@@ -103,5 +117,3 @@ class CommentAdmin(admin.ModelAdmin):
         'updated_at',
     )
     search_fields = ('author', 'product', 'text', 'date')
-
-    actions = (activate_selected_items, deactivate_selected_items)
